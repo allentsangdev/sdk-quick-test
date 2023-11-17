@@ -14,7 +14,7 @@ describe("apiClient Class Error Handling Tests", () => {
   it("apiClient : it should return a zod error apikey and baseUrl", async function () {
     this.timeout(defaultTestTimeout);
     // @ts-ignore
-    expect(new Ludex.ClientScoped(123,{baseUrl: 123,})).to.throw;
+    await expect( () => {new Ludex.ClientScoped(123,{baseUrl: 123,})}).to.eventually.be.rejected;
     // @ts-ignore
     const error = await ludexVaultAPI.getVault('abc').catch((err) => err);
     expect(error.name).to.be.eq("ZodError")
