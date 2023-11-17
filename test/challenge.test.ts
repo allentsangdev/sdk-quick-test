@@ -18,14 +18,6 @@ describe("Challenge Class Error Handling Tests", () => {
   ).challenge;
 
   before(async () => {});
-
-  //   it("getChallenge : it should return a zod error", async function () {
-  //     this.timeout(defaultTestTimeout);
-  //     await expect(ludexChallengeAPI.getChallenge("abc" as unknown as number)).to.eventually.be.rejectedWith(ZodError);
-  //     // await expect(ludexChallengeAPI.getChallenge("abc" as unknown as number)).to.eventually.throw("Expected number, received string");
-  //     // expect(await ludexChallengeAPI.getChallenge("abc" as unknown as number)).to.throw(ZodError)
-  //   });
-
   /*-------------------------------------------- getChallenge -------------------------------------------- */
   it("getChallenge : it should return a zod error on the challengeId", async function () {
     this.timeout(defaultTestTimeout);
@@ -90,7 +82,6 @@ describe("Challenge Class Error Handling Tests", () => {
     // @todo : remove ts-ignore after merging the SDK filter fix PR
     // @ts-ignore
     const response = await ludexChallengeAPI.getChallenges()
-    console.log(response.data)
     expect(response).to.be.an('object')
     expect(response.data).to.have.property('challenges')
     expect(response.data).to.have.property('remainingRecords')
@@ -239,7 +230,6 @@ describe("Challenge Class Error Handling Tests", () => {
     await expect(ludexChallengeAPI.resolveChallenge(resolveChallenge)).to.eventually.be.rejected;
     // @ts-ignore
     const error = await ludexChallengeAPI.resolveChallenge(resolveChallenge).catch((err) => err);
-    console.log(error)
     expect(error.name).to.be.eq("ZodError")
     expect(error.errors[0].message).to.be.eq("Expected number, received string");
     expect(error.errors[1].message).to.be.eq("Invalid input");
