@@ -39,6 +39,34 @@ describe("Vault Class Error Handling Tests", () => {
     expect(error.response.data.message).to.be.eq("Invalid enum value. Expected 'SOLANA', received 'AVALANCHE'");
   });
 
+  /*-------------------------------------------- createVault -------------------------------------------- */
+  it("createVault : it should return a zod error on the vault object", async function () {
+    this.timeout(defaultTestTimeout);
+    const vault = {
+      name: 123, 
+      chain: 123,
+      feeRecipient: 123
+    }
+    // @ts-ignore
+    await expect(ludexVaultAPI.createVault(vault)).to.eventually.be.rejected;
+    // @ts-ignore
+    const error = await ludexVaultAPI.createVault(vault).catch((err) => err);
+    expect(error.name).to.be.eq("ZodError")
+    expect(error.errors[0].message).to.be.eq("Expected string, received number");
+    expect(error.errors[1].message).to.be.eq("Expected 'SOLANA' | 'AVALANCHE', received number");
+    expect(error.errors[2].message).to.be.eq("Expected string, received number");
+  });
 
-
+  it("createVault : it should return a AxiosError: Invalid public key = ", async function () {
+    this.timeout(defaultTestTimeout);
+    const vault = {
+      name: 'test', 
+      chain: Chain.Enum.SOLANA,
+      feeRecipient: '0x0'
+    }
+    await expect(ludexVaultAPI.createVault(vault)).to.eventually.be.rejected;
+    const error = await ludexVaultAPI.createVault(vault).catch((err) => err);
+    expect(error.name).to.be.eq("AxiosError")
+    expect(error.response.data.message).to.be.eq("Invalid public key");
+  });
 });
