@@ -31,7 +31,8 @@ describe("Challenge Class Error Handling Tests", () => {
   it("getChallenge : it should return a zod error", async function () {
     this.timeout(defaultTestTimeout);
     try {
-      await ludexChallengeAPI.getChallenge("abc" as unknown as number);
+      // @ts-ignore
+      await ludexChallengeAPI.getChallenge("abc");
     } catch (error: any) {
       expect(error.errors[0].message).to.be.eq(
         "Expected number, received string"
