@@ -227,4 +227,37 @@ describe("Challenge Class Error Handling Tests", () => {
     expect(error.name).to.be.eq("AxiosError")
     expect(error.response.data.message).to.be.eq('Challenge not found')
   });
+
+  /*-------------------------------------------- resolveChallenge -------------------------------------------- */
+  it("resolveChallenge : it should return ZodError on every field of the resolve challenge object", async function () {
+    this.timeout(defaultTestTimeout);
+    const resolveChallenge = {
+      challengeId: 'abc',
+      payout: 'abc'
+    }
+    // @ts-ignore
+    await expect(ludexChallengeAPI.resolveChallenge(resolveChallenge)).to.eventually.be.rejected;
+    // @ts-ignore
+    const error = await ludexChallengeAPI.resolveChallenge(resolveChallenge).catch((err) => err);
+    console.log(error)
+    expect(error.name).to.be.eq("ZodError")
+    expect(error.errors[0].message).to.be.eq("Expected number, received string");
+    expect(error.errors[1].message).to.be.eq("Invalid input");
+  });
+
+  it("cancelChallenge : it should return a AxiosError: Invalid public key", async function () {
+    this.timeout(defaultTestTimeout);
+    const resolveChallenge = {
+      challengeId: 1,
+      payout: [{
+        amount: '123',
+        to: '0x0'
+      }]
+    }
+    await expect(ludexChallengeAPI.resolveChallenge(resolveChallenge)).to.eventually.be.rejected;
+    const error = await ludexChallengeAPI.resolveChallenge(resolveChallenge).catch((err) => err);
+    expect(error.name).to.be.eq("AxiosError")
+    expect(error.response.data.message).to.be.eq('Invalid public key')
+  });
+
 });
