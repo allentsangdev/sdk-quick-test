@@ -148,11 +148,29 @@ describe("Vault Class Error Handling Tests", () => {
     }
     await expect(ludexVaultAPI.generateTransaction(transaction)).to.eventually.be.rejected;
     const error = await ludexVaultAPI.generateTransaction(transaction).catch((err) => err);
-    console.log(error.response.data)
     expect(error.name).to.be.eq("AxiosError")
     expect(error.response.data.message).to.be.eq("Invalid public key");
   });
 
   /*-------------------------------------------- getTransactions -------------------------------------------- */
+  it("getTransactions : it should return a zod error on the Chain", async function () {
+    this.timeout(defaultTestTimeout);
+    // @ts-ignore
+    await expect(ludexVaultAPI.getTransactions('abc')).to.eventually.be.rejected;
+    // @ts-ignore
+    const error = await ludexVaultAPI.getTransactions('abc').catch((err) => err);
+    expect(error.name).to.be.eq("ZodError")
+    expect(error.errors[0].message).to.be.eq("Invalid enum value. Expected 'SOLANA' | 'AVALANCHE', received 'abc'");
+  });
+
+  // @todo : should pass after the bugfix/vault_api PR
+  it("generateTransaction : it should return a AxiosError: ZodError from api", async function () {
+    this.timeout(defaultTestTimeout);
+    await expect(ludexVaultAPI.getTransactions(Chain.Enum.AVALANCHE)).to.eventually.be.rejected;
+    const error = await ludexVaultAPI.getTransactions(Chain.Enum.AVALANCHE).catch((err) => err);
+    console.log(error.response.data)
+    expect(error.name).to.be.eq("AxiosError")
+    expect(error.response.data.message).to.be.eq("Invalid enum value. Expected 'SOLANA', received 'AVALANCHE'");
+  });
   
 });
