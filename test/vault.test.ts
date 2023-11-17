@@ -1,4 +1,4 @@
-import { Ludex, Chain } from "@ludex-labs/ludex-sdk-js";
+import { Ludex, Chain, RedeemType } from "@ludex-labs/ludex-sdk-js";
 import { expect } from "chai";
 import dotenv from "dotenv";
 import chai from "chai";
@@ -57,7 +57,7 @@ describe("Vault Class Error Handling Tests", () => {
     expect(error.errors[2].message).to.be.eq("Expected string, received number");
   });
 
-  it("createVault : it should return a AxiosError: Invalid public key = ", async function () {
+  it("createVault : it should return a AxiosError: Invalid public key", async function () {
     this.timeout(defaultTestTimeout);
     const vault = {
       name: 'test', 
@@ -88,7 +88,7 @@ describe("Vault Class Error Handling Tests", () => {
     expect(error.errors[2].message).to.be.eq("Expected 'SOLANA' | 'AVALANCHE', received number");
   });
 
-  it("updateVault : it should return a AxiosError: Invalid public key = ", async function () {
+  it("updateVault : it should return a AxiosError: Invalid public key", async function () {
     this.timeout(defaultTestTimeout);
     const vault = {
       name: 'test', 
@@ -100,4 +100,59 @@ describe("Vault Class Error Handling Tests", () => {
     expect(error.name).to.be.eq("AxiosError")
     expect(error.response.data.message).to.be.eq("Invalid public key");
   });
+
+  /*-------------------------------------------- generateTransaction -------------------------------------------- */
+  it("generateTransaction : it should return a zod error on the transaction object", async function () {
+    this.timeout(defaultTestTimeout);
+    const transaction = {
+      chain: 123, 
+      type: 123,
+      gasless: 123,
+      playerPublicKey: 123, 
+      amountGiven: 'abc',
+      amountRedeemed: 'abc',
+      overideFeeRecipientPubkey: 123 ,
+      payMint: 123,
+      receiveMint: 123
+    }
+    // @ts-ignore
+    await expect(ludexVaultAPI.generateTransaction(transaction)).to.eventually.be.rejected;
+    // @ts-ignore
+    const error = await ludexVaultAPI.generateTransaction(transaction).catch((err) => err);
+    console.log(error)
+    expect(error.name).to.be.eq("ZodError")
+    expect(error.errors[0].message).to.be.eq("Expected 'SOLANA' | 'AVALANCHE', received number");
+    expect(error.errors[1].message).to.be.eq("Expected 'native' | 'nativeForTokens' | 'tokensForNative' | 'tokensForTokens', received number");
+    expect(error.errors[2].message).to.be.eq("Expected boolean, received number");
+    expect(error.errors[3].message).to.be.eq("Expected string, received number");
+    expect(error.errors[4].message).to.be.eq("Expected number, received string");
+    expect(error.errors[5].message).to.be.eq("Expected number, received string");
+    expect(error.errors[6].message).to.be.eq("Expected string, received number");
+    expect(error.errors[7].message).to.be.eq("Expected string, received number");
+    expect(error.errors[8].message).to.be.eq("Expected string, received number");
+  });
+
+  // @todo : should pass after the bugfix/vault_api PR
+  it("generateTransaction : it should return a AxiosError: Invalid public key", async function () {
+    this.timeout(defaultTestTimeout);
+    const transaction = {
+      chain: Chain.Enum.SOLANA, 
+      type: RedeemType.Enum.native,
+      gasless: false,
+      playerPublicKey: '0x0', 
+      amountGiven: 123,
+      amountRedeemed: 123,
+      overideFeeRecipientPubkey: '0x0',
+      payMint: 'abc',
+      receiveMint: 'abc'
+    }
+    await expect(ludexVaultAPI.generateTransaction(transaction)).to.eventually.be.rejected;
+    const error = await ludexVaultAPI.generateTransaction(transaction).catch((err) => err);
+    console.log(error.response.data)
+    expect(error.name).to.be.eq("AxiosError")
+    expect(error.response.data.message).to.be.eq("Invalid public key");
+  });
+
+  /*-------------------------------------------- getTransactions -------------------------------------------- */
+  
 });
