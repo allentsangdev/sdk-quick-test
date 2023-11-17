@@ -96,6 +96,37 @@ describe("Challenge Class Error Handling Tests", () => {
     expect(response.data).to.have.property('remainingRecords')
   });
 
-  /*-------------------------------------------- createChallenges -------------------------------------------- */
+  /*-------------------------------------------- createChallenge -------------------------------------------- */
+  it("createChallenge : it should return ZodError on every field of the challenge object", async function () {
+    this.timeout(defaultTestTimeout);
+    const challenge = {
+      payoutId: 'abc',
+      limit: 'abc' ,
+      isVerified: 'abc'
+    }
+    // @ts-ignore
+    await expect(ludexChallengeAPI.createChallenge(challenge)).to.eventually.be.rejected;
+    // @ts-ignore
+    const error = await ludexChallengeAPI.createChallenge(challenge).catch((err) => err);
+    expect(error.name).to.be.eq("ZodError")
+    expect(error.errors[0].message).to.be.eq("Expected number, received string");
+    expect(error.errors[1].message).to.be.eq("Expected number, received string");
+    expect(error.errors[2].message).to.be.eq("Expected boolean, received string");
+  });
 
+  it("createChallenge : it should return a AxiosError: Player limit must be larger than 1", async function () {
+    this.timeout(defaultTestTimeout);
+    const challenge = {
+      payoutId: 31,
+      limit: 1,
+    }
+    // @ts-ignore
+    await expect(ludexChallengeAPI.createChallenge(challenge)).to.eventually.be.rejected;
+    // @ts-ignore
+    const error = await ludexChallengeAPI.createChallenge(challenge).catch((err) => err);
+    console.log(error)
+    expect(error.name).to.be.eq("AxiosError")
+    expect(error.response.data.message).to.be.eq('Player limit must be larger than 1')
+  });
+  
 });
