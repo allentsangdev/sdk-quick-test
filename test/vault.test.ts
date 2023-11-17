@@ -119,7 +119,6 @@ describe("Vault Class Error Handling Tests", () => {
     await expect(ludexVaultAPI.generateTransaction(transaction)).to.eventually.be.rejected;
     // @ts-ignore
     const error = await ludexVaultAPI.generateTransaction(transaction).catch((err) => err);
-    console.log(error)
     expect(error.name).to.be.eq("ZodError")
     expect(error.errors[0].message).to.be.eq("Expected 'SOLANA' | 'AVALANCHE', received number");
     expect(error.errors[1].message).to.be.eq("Expected 'native' | 'nativeForTokens' | 'tokensForNative' | 'tokensForTokens', received number");
@@ -168,7 +167,6 @@ describe("Vault Class Error Handling Tests", () => {
     this.timeout(defaultTestTimeout);
     await expect(ludexVaultAPI.getTransactions(Chain.Enum.AVALANCHE)).to.eventually.be.rejected;
     const error = await ludexVaultAPI.getTransactions(Chain.Enum.AVALANCHE).catch((err) => err);
-    console.log(error.response.data)
     expect(error.name).to.be.eq("AxiosError")
     expect(error.response.data.message).to.be.eq("Invalid enum value. Expected 'SOLANA', received 'AVALANCHE'");
   });
@@ -188,7 +186,6 @@ describe("Vault Class Error Handling Tests", () => {
       this.timeout(defaultTestTimeout);
       await expect(ludexVaultAPI.getTransaction(Chain.Enum.AVALANCHE, '123')).to.eventually.be.rejected;
       const error = await ludexVaultAPI.getTransaction(Chain.Enum.AVALANCHE, '123').catch((err) => err);
-      console.log(error.response.data)
       expect(error.name).to.be.eq("AxiosError")
       expect(error.response.data.message).to.be.eq("Invalid enum value. Expected 'SOLANA', received 'AVALANCHE'");
     });

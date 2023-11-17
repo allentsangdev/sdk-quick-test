@@ -53,7 +53,6 @@ describe("Payout Class Error Handling Tests", () => {
     await expect(ludexChallengeAPI.getPayouts(filter)).to.eventually.be.rejected;
     // @ts-ignore
     const error = await ludexChallengeAPI.getPayouts(filter).catch((err) => err);
-    console.log(error)
     expect(error.name).to.be.eq("ZodError")
     expect(error.errors[0].message).to.be.eq("Expected number, received string");
     expect(error.errors[1].message).to.be.eq("Invalid enum value. Expected 'APPROVED' | 'PENDING' | 'REJECTED' | 'ARCHIVED', received 'abc'");
