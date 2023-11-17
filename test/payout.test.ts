@@ -1,4 +1,4 @@
-import { Ludex, Chain } from "@ludex-labs/ludex-sdk-js";
+import { Ludex, Chain, PayoutState, PayoutType } from "@ludex-labs/ludex-sdk-js";
 import { expect } from "chai";
 import dotenv from "dotenv";
 import chai from "chai";
@@ -67,13 +67,14 @@ describe("Payout Class Error Handling Tests", () => {
     this.timeout(defaultTestTimeout);
     const filter = {
         mindId: 1 ,
+        state: PayoutState.Enum.APPROVED,
+        type: PayoutType.Enum.FT,
         chain: Chain.Enum.SOLANA,
         cursor: 1 ,
         pageLimit: 100000,
     }
     
     await expect(ludexChallengeAPI.getPayouts(filter)).to.eventually.be.rejected;
-    // @ts-ignore
     const error = await ludexChallengeAPI.getPayouts(filter).catch((err) => err);
     expect(error.name).to.be.eq("AxiosError")
     expect(error.response.data.message).to.be.eq("Page limit too high");
