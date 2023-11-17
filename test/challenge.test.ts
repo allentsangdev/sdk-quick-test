@@ -159,5 +159,36 @@ describe("Challenge Class Error Handling Tests", () => {
     expect(error.name).to.be.eq("AxiosError")
     expect(error.response.data.message).to.be.eq('Invalid public key')
   });
+
+  /*-------------------------------------------- generateLeave -------------------------------------------- */
+  it("generateLeave : it should return ZodError on every field of the challenge object", async function () {
+    this.timeout(defaultTestTimeout);
+    const challenge = {
+      challengeId: 'abc',
+      playerPubkey: 123 ,
+      gasless: 'abc'
+    }
+    // @ts-ignore
+    await expect(ludexChallengeAPI.generateLeave(challenge)).to.eventually.be.rejected;
+    // @ts-ignore
+    const error = await ludexChallengeAPI.generateLeave(challenge).catch((err) => err);
+    expect(error.name).to.be.eq("ZodError")
+    expect(error.errors[0].message).to.be.eq("Expected number, received string");
+    expect(error.errors[1].message).to.be.eq("Expected string, received number");
+    expect(error.errors[2].message).to.be.eq("Expected boolean, received string");
+  });
+
+  it("generateLeave : it should return a AxiosError: Invalid public key", async function () {
+    this.timeout(defaultTestTimeout);
+    const challenge = {
+      challengeId: 1,
+      playerPubkey: "0x0" ,
+    }
+    await expect(ludexChallengeAPI.generateLeave(challenge)).to.eventually.be.rejected;
+    const error = await ludexChallengeAPI.generateLeave(challenge).catch((err) => err);
+    expect(error.name).to.be.eq("AxiosError")
+    expect(error.response.data.message).to.be.eq('Invalid public key')
+  });
+
   
 });
