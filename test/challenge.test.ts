@@ -124,9 +124,40 @@ describe("Challenge Class Error Handling Tests", () => {
     await expect(ludexChallengeAPI.createChallenge(challenge)).to.eventually.be.rejected;
     // @ts-ignore
     const error = await ludexChallengeAPI.createChallenge(challenge).catch((err) => err);
-    console.log(error)
     expect(error.name).to.be.eq("AxiosError")
     expect(error.response.data.message).to.be.eq('Player limit must be larger than 1')
+  });
+  
+  /*-------------------------------------------- generateJoin -------------------------------------------- */
+  it("generateJoin : it should return ZodError on every field of the challenge object", async function () {
+    this.timeout(defaultTestTimeout);
+    const challenge = {
+      challengeId: 'abc',
+      playerPubkey: 123 ,
+      gasless: 'abc',
+      offerings: 'abc'
+    }
+    // @ts-ignore
+    await expect(ludexChallengeAPI.generateJoin(challenge)).to.eventually.be.rejected;
+    // @ts-ignore
+    const error = await ludexChallengeAPI.generateJoin(challenge).catch((err) => err);
+    expect(error.name).to.be.eq("ZodError")
+    expect(error.errors[0].message).to.be.eq("Expected number, received string");
+    expect(error.errors[1].message).to.be.eq("Expected string, received number");
+    expect(error.errors[2].message).to.be.eq("Expected boolean, received string");
+    expect(error.errors[3].message).to.be.eq("Expected array, received string");
+  });
+
+  it("generateJoin : it should return a AxiosError: Invalid public key", async function () {
+    this.timeout(defaultTestTimeout);
+    const challenge = {
+      challengeId: 1,
+      playerPubkey: "0x0" ,
+    }
+    await expect(ludexChallengeAPI.generateJoin(challenge)).to.eventually.be.rejected;
+    const error = await ludexChallengeAPI.generateJoin(challenge).catch((err) => err);
+    expect(error.name).to.be.eq("AxiosError")
+    expect(error.response.data.message).to.be.eq('Invalid public key')
   });
   
 });
