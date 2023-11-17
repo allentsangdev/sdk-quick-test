@@ -201,10 +201,29 @@ describe("Challenge Class Error Handling Tests", () => {
     expect(error.errors[0].message).to.be.eq("Expected string, received boolean");
   });
 
-  it("lockChallenge : it should return a AxiosError: Invalid public key", async function () {
+  it("lockChallenge : it should return a AxiosError: Challenge not found", async function () {
     this.timeout(defaultTestTimeout);
     await expect(ludexChallengeAPI.lockChallenge('99999')).to.eventually.be.rejected
     const error = await ludexChallengeAPI.lockChallenge('99999').catch((err) => err);
+    expect(error.name).to.be.eq("AxiosError")
+    expect(error.response.data.message).to.be.eq('Challenge not found')
+  });
+
+  /*-------------------------------------------- cancelChallenge -------------------------------------------- */
+  it("cancelChallenge : it should return ZodError on challengeId", async function () {
+    this.timeout(defaultTestTimeout);
+    // @ts-ignore
+    await expect(ludexChallengeAPI.cancelChallenge(false)).to.eventually.be.rejected;
+    // @ts-ignore
+    const error = await ludexChallengeAPI.cancelChallenge(false).catch((err) => err);
+    expect(error.name).to.be.eq("ZodError")
+    expect(error.errors[0].message).to.be.eq("Expected string, received boolean");
+  });
+
+  it("cancelChallenge : it should return a AxiosError: Challenge not found", async function () {
+    this.timeout(defaultTestTimeout);
+    await expect(ludexChallengeAPI.cancelChallenge('99999')).to.eventually.be.rejected
+    const error = await ludexChallengeAPI.cancelChallenge('99999').catch((err) => err);
     expect(error.name).to.be.eq("AxiosError")
     expect(error.response.data.message).to.be.eq('Challenge not found')
   });
