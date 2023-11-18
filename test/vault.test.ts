@@ -121,7 +121,7 @@ describe("Vault Class Error Handling Tests", () => {
     const error = await ludexVaultAPI.generateTransaction(transaction).catch((err) => err);
     expect(error.name).to.be.eq("ZodError")
     expect(error.errors[0].message).to.be.eq("Invalid enum value. Expected 'SOLANA' | 'AVALANCHE', received '123'");
-    expect(error.errors[1].message).to.be.eq("Expected 'native' | 'nativeForTokens' | 'tokensForNative' | 'tokensForTokens', received number");
+    expect(error.errors[1].message).to.be.eq("Invalid enum value. Expected 'native' | 'nativeForTokens' | 'tokensForNative' | 'tokensForTokens', received '123'");
     expect(error.errors[2].message).to.be.eq("Expected boolean, received number");
     expect(error.errors[3].message).to.be.eq("Expected string, received number");
     expect(error.errors[4].message).to.be.eq("Expected number, received string");
@@ -136,7 +136,7 @@ describe("Vault Class Error Handling Tests", () => {
     this.timeout(defaultTestTimeout);
     const transaction = {
       chain: Chain.SOLANA, 
-      type: RedeemType.Enum.native,
+      type: RedeemType.native,
       gasless: false,
       playerPublicKey: '0x0', 
       amountGiven: 123,
@@ -148,7 +148,6 @@ describe("Vault Class Error Handling Tests", () => {
     await expect(ludexVaultAPI.generateTransaction(transaction)).to.eventually.be.rejected;
     const error = await ludexVaultAPI.generateTransaction(transaction).catch((err) => err);
     expect(error.name).to.be.eq("AxiosError")
-    console.log(error.response.data)
     expect(error.response.data.message).to.be.eq("Invalid public key");
   });
 

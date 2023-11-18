@@ -66,8 +66,8 @@ describe("Payout Class Error Handling Tests", () => {
     this.timeout(defaultTestTimeout);
     const filter = {
         mindId: 1 ,
-        state: PayoutState.Enum.APPROVED,
-        type: PayoutType.Enum.FT,
+        state: PayoutState.APPROVED,
+        type: PayoutType.FT,
         chain: Chain.SOLANA,
         cursor: 1 ,
         pageLimit: 100000,
