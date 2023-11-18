@@ -5,6 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "mocha --require ts-node/register test/**/*.ts",
+    "test_apiClient": "mocha --require ts-node/register test/apiClient.test.ts",
+    "test_client": "mocha --require ts-node/register test/client.test.ts",
     "build": "tsc",
     "start": "node dist/app/app.js"
   },
