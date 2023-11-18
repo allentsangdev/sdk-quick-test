@@ -68,7 +68,7 @@ describe("Payout Class Error Handling Tests", () => {
         mindId: 1 ,
         state: PayoutState.Enum.APPROVED,
         type: PayoutType.Enum.FT,
-        chain: Chain.Enum.SOLANA,
+        chain: Chain.SOLANA,
         cursor: 1 ,
         pageLimit: 100000,
     }

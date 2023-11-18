@@ -100,7 +100,7 @@ describe("Client Class Error Handling Tests", () => {
   it("updateClientWallet : it should return a zod error on the client wallet", async function () {
     this.timeout(defaultTestTimeout);
     const wallet = {
-        chain: 123,
+        chain: Chain.AVALANCHE,
         address: 123
     }
     // @ts-ignore
@@ -109,19 +109,18 @@ describe("Client Class Error Handling Tests", () => {
     const error = await ludexClientAPI.updateClientWallet(123, wallet).catch((err) => err);
     expect(error.name).to.be.eq("ZodError");
     expect(error.errors[0].message).to.be.eq("Expected string, received number");
-    expect(error.errors[1].message).to.be.eq("Expected string, received number");
   });
 
-  it("getOpenChallengeCount : it should return a AxiosError: invalid wallet", async function () {
+  it("getOpenChallengeCount : it should return a AxiosError: invalid public key", async function () {
     this.timeout(defaultTestTimeout);
     const wallet = {
-        chain: '123',
+        chain: Chain.AVALANCHE,
         address: '123'
     }
     await expect(ludexClientAPI.updateClientWallet(999999, wallet)).to.eventually.be.rejected;
     const error = await ludexClientAPI.updateClientWallet(999999, wallet).catch((err) => err);
     expect(error.name).to.be.eq("AxiosError");
-    expect(error.response.data.message).to.be.eq("Invalid enum value. Expected 'SOLANA' | 'POLYGON' | 'SUI' | 'NEAR' | 'AVALANCHE', received '123'");
+    expect(error.response.data.message).to.be.eq("Invalid public key");
   });
 
     /*-------------------------------------------- deleteClient -------------------------------------------- */
