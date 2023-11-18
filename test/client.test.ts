@@ -1,4 +1,9 @@
-import { Ludex, Chain, PayoutState, PayoutType } from "@ludex-labs/ludex-sdk-js";
+import {
+  Ludex,
+  Chain,
+  PayoutState,
+  PayoutType,
+} from "@ludex-labs/ludex-sdk-js";
 import { expect } from "chai";
 import dotenv from "dotenv";
 import chai from "chai";
@@ -23,21 +28,59 @@ describe("Client Class Error Handling Tests", () => {
   it("getClient : it should return a zod error on the clientId", async function () {
     this.timeout(defaultTestTimeout);
     // @ts-ignore
-    await expect(ludexClientAPI.getClient('abc')).to.eventually.be.rejected;
+    await expect(ludexClientAPI.getClient("abc")).to.eventually.be.rejected;
     // @ts-ignore
-    const error = await ludexClientAPI.getClient('abc').catch((err) => err);
-    expect(error.name).to.be.eq("ZodError")
-    expect(error.errors[0].message).to.be.eq("Expected number, received string");
+    const error = await ludexClientAPI.getClient("abc").catch((err) => err);
+    expect(error.name).to.be.eq("ZodError");
+    expect(error.errors[0].message).to.be.eq(
+      "Expected number, received string"
+    );
   });
 
   it("getClient : it should return a AxiosError: Client not found", async function () {
     this.timeout(defaultTestTimeout);
     await expect(ludexClientAPI.getClient(999999)).to.eventually.be.rejected;
     const error = await ludexClientAPI.getClient(999999).catch((err) => err);
-    expect(error.name).to.be.eq("AxiosError")
+    expect(error.name).to.be.eq("AxiosError");
     expect(error.response.data.message).to.be.eq("Client not found");
   });
 
-  
+  /*-------------------------------------------- createClients -------------------------------------------- */
+  it("createClient : it should return a zod error on the client name", async function () {
+    this.timeout(defaultTestTimeout);
+    const client = {
+      name: 123,
+    };
+    // @ts-ignore
+    await expect(ludexClientAPI.createClient(client)).to.eventually.be.rejected;
+    // @ts-ignore
+    const error = await ludexClientAPI.createClient(client).catch((err) => err);
+    expect(error.name).to.be.eq("ZodError");
+    expect(error.errors[0].message).to.be.eq(
+      "Expected string, received number"
+    );
+  });
+
+  /*-------------------------------------------- getOPenChallengeCount -------------------------------------------- */
+  it("getOpenChallengeCOunt : it should return a zod error on the client id", async function () {
+    this.timeout(defaultTestTimeout);
+    // @ts-ignore
+    await expect(ludexClientAPI.getOpenChallengeCount('123')).to.eventually.be.rejected;
+    // @ts-ignore
+    const error = await ludexClientAPI.getOpenChallengeCount('123').catch((err) => err);
+    expect(error.name).to.be.eq("ZodError");
+    expect(error.errors[0].message).to.be.eq(
+      "Expected number, received string"
+    );
+  });
+
+  it("getOpenChallengeCount : it should return a AxiosError: Client not found", async function () {
+    this.timeout(defaultTestTimeout);
+    await expect(ludexClientAPI.getOpenChallengeCount(999999)).to.eventually.be.rejected;
+    const error = await ludexClientAPI.getOpenChallengeCount(999999).catch((err) => err);
+    expect(error.name).to.be.eq("AxiosError");
+    expect(error.response.data.message).to.be.eq("Client not found");
+  });
+
 
 });
