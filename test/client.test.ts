@@ -61,7 +61,7 @@ describe("Client Class Error Handling Tests", () => {
     );
   });
 
-  /*-------------------------------------------- getOPenChallengeCount -------------------------------------------- */
+  /*-------------------------------------------- getOpenChallengeCount -------------------------------------------- */
   it("getOpenChallengeCOunt : it should return a zod error on the client id", async function () {
     this.timeout(defaultTestTimeout);
     // @ts-ignore
@@ -80,6 +80,48 @@ describe("Client Class Error Handling Tests", () => {
     const error = await ludexClientAPI.getOpenChallengeCount(999999).catch((err) => err);
     expect(error.name).to.be.eq("AxiosError");
     expect(error.response.data.message).to.be.eq("Client not found");
+  });
+
+  /*-------------------------------------------- updateClientWallet -------------------------------------------- */
+  it("updateClientWallet : it should return a zod error on the client id", async function () {
+    this.timeout(defaultTestTimeout);
+    const wallet = {
+        chain: 123,
+        address: 123
+    }
+    // @ts-ignore
+    await expect(ludexClientAPI.updateClientWallet('123', wallet)).to.eventually.be.rejected;
+    // @ts-ignore
+    const error = await ludexClientAPI.updateClientWallet('123', wallet).catch((err) => err);
+    expect(error.name).to.be.eq("ZodError");
+    expect(error.errors[0].message).to.be.eq("Expected number, received string");
+  });
+
+  it("updateClientWallet : it should return a zod error on the client wallet", async function () {
+    this.timeout(defaultTestTimeout);
+    const wallet = {
+        chain: 123,
+        address: 123
+    }
+    // @ts-ignore
+    await expect(ludexClientAPI.updateClientWallet(123, wallet)).to.eventually.be.rejected;
+    // @ts-ignore
+    const error = await ludexClientAPI.updateClientWallet(123, wallet).catch((err) => err);
+    expect(error.name).to.be.eq("ZodError");
+    expect(error.errors[0].message).to.be.eq("Expected string, received number");
+    expect(error.errors[1].message).to.be.eq("Expected string, received number");
+  });
+
+  it("getOpenChallengeCount : it should return a AxiosError: invalid wallet", async function () {
+    this.timeout(defaultTestTimeout);
+    const wallet = {
+        chain: '123',
+        address: '123'
+    }
+    await expect(ludexClientAPI.updateClientWallet(999999, wallet)).to.eventually.be.rejected;
+    const error = await ludexClientAPI.updateClientWallet(999999, wallet).catch((err) => err);
+    expect(error.name).to.be.eq("AxiosError");
+    expect(error.response.data.message).to.be.eq("Invalid enum value. Expected 'SOLANA' | 'POLYGON' | 'SUI' | 'NEAR' | 'AVALANCHE', received '123'");
   });
 
 
