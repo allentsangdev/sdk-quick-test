@@ -124,5 +124,24 @@ describe("Client Class Error Handling Tests", () => {
     expect(error.response.data.message).to.be.eq("Invalid enum value. Expected 'SOLANA' | 'POLYGON' | 'SUI' | 'NEAR' | 'AVALANCHE', received '123'");
   });
 
-
+    /*-------------------------------------------- deleteClient -------------------------------------------- */
+    it("deleteClient : it should return a zod error on the client id", async function () {
+        this.timeout(defaultTestTimeout);
+        // @ts-ignore
+        await expect(ludexClientAPI.deleteClient('123')).to.eventually.be.rejected;
+        // @ts-ignore
+        const error = await ludexClientAPI.deleteClient('123').catch((err) => err);
+        expect(error.name).to.be.eq("ZodError");
+        expect(error.errors[0].message).to.be.eq(
+          "Expected number, received string"
+        );
+      });
+    
+      it("deleteClient : it should return a AxiosError: Client not found", async function () {
+        this.timeout(defaultTestTimeout);
+        await expect(ludexClientAPI.deleteClient(999999)).to.eventually.be.rejected;
+        const error = await ludexClientAPI.deleteClient(999999).catch((err) => err);
+        expect(error.name).to.be.eq("AxiosError");
+        expect(error.response.data.message).to.be.eq("Client not found");
+      });
 });
