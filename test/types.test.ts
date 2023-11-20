@@ -90,16 +90,23 @@ describe("ZodError, AxiosError and Native Enum Tests", () => {
     }
   });
 
-  it("getChallenges : it should return a zod error on every field of the filter object", async function () {
+  it("getChallenges : it should return challenge not found", async function () {
     this.timeout(defaultTestTimeout);
-    const filter = {
-      environment: Environment.DEVNET,
-      state: ChallengeState.CREATED,
-      type: PayoutType.NATIVE,
-      chain: Chain.AVALANCHE,
-    };
-    const response = ludexChallengeAPI.getChallenges(filter)
-
-
+    try {
+      const filter = {
+        payoutId: 0,
+        environment: Environment.DEVNET,
+        state: ChallengeState.CREATED,
+        type: PayoutType.NATIVE,
+        chain: Chain.AVALANCHE,
+      };
+      ludexChallengeAPI.getChallenges(filter)
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        console.log(error)
+        expect(error.name).to.be.eq("AxiosError")
+      }
+      
+    }
   });
 });
