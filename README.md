@@ -13,9 +13,11 @@ npm install
 ```
 
 ### 2. Set Up Environment Variables
+
 Create a ```.env``` file at the project root by following the structure in ```.env.sample```. Make sure to fill in the necessary values for your environment variables and **DO NOT** run test against the Production API by making sure ```LUDEX_PROTOCOL_API``` is pointing to staging API
 
 ### 3. Run Unit Tests
+
 ``` bash
 # Run all tests
 npm run test 
