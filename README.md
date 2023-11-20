@@ -1,6 +1,6 @@
 # Unit Tests Repository
 
-This repository contains unit tests for ludex-js-sdk, written using Mocha and Chai.
+This repository contains unit tests for [ludex-js-sdk](https://github.com/Ludex-Labs/ludex-sdk-js/tree/feature/zodParsingTypes), written using Mocha and Chai.
 
 ## Getting Started
 
@@ -8,7 +8,7 @@ To run the unit tests locally, follow the steps below:
 
 ### 1. Install Dependencies
 
-```bash
+```shell
 npm install
 ```
 
