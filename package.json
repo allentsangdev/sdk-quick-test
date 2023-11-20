@@ -10,6 +10,7 @@
     "test_client": "mocha --require ts-node/register test/client.test.ts",
     "test_payout": "mocha --require ts-node/register test/payout.test.ts",
     "test_vault": "mocha --require ts-node/register test/vault.test.ts",
+    "test_types": "mocha --require ts-node/register test/types.test.ts",
     "build": "tsc",
     "start": "node dist/app/app.js"
   },
