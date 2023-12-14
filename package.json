@@ -18,7 +18,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@ludex-labs/ludex-sdk-js": "file:../sdk-zod-branch/ludex-sdk-js",
+    "@ludex-labs/ludex-sdk-js": "file:../sdk-type-branch/ludex-sdk-js",
     "dotenv": "^16.3.1",
     "zod": "^3.22.4"
   },
